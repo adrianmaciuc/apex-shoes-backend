@@ -1,17 +1,17 @@
 export default [
-  'strapi::logger',
-  'strapi::errors',
-  'strapi::security',
+  "strapi::logger",
+  "strapi::errors",
+  "strapi::security",
   {
-    name: 'strapi::cors',
+    name: "strapi::cors",
     config: {
-      origin: ['*'],
+      origin: ["https://apexshoes.martioli.com/"],
     },
   },
-  'strapi::poweredBy',
-  'strapi::query',
-  'strapi::body',
-  'strapi::session',
-  'strapi::favicon',
-  'strapi::public',
+  "strapi::poweredBy",
+  "strapi::query",
+  "strapi::body",
+  "strapi::session",
+  "strapi::favicon",
+  "strapi::public",
 ];
