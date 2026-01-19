@@ -5,8 +5,9 @@ export default [
   {
     name: "strapi::cors",
     config: {
-      origin: ["https://apexshoes.martioli.com/", "http://localhost:5173"],
+      origin: ["https://apexshoes.martioli.com", "http://localhost:5173", "http://localhost:3000"],
       credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
       headers: ["Content-Type", "Authorization", "Origin", "Accept"],
     },
   },
