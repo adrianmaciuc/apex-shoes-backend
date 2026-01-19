@@ -4,14 +4,9 @@ export default [
   'strapi::security',
   {
     name: 'strapi::cors',
-    config: ({ env }) => ({
-      origin: [
-        env('FRONTEND_URL', 'http://localhost:3000'),
-      ],
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
-      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
-      credentials: true,
-    }),
+    config: {
+      origin: ['*'],
+    },
   },
   'strapi::poweredBy',
   'strapi::query',
