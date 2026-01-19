@@ -2,7 +2,17 @@ export default [
   'strapi::logger',
   'strapi::errors',
   'strapi::security',
-  'strapi::cors',
+  {
+    name: 'strapi::cors',
+    config: ({ env }) => ({
+      origin: [
+        env('FRONTEND_URL', 'http://localhost:3000'),
+      ],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+      credentials: true,
+    }),
+  },
   'strapi::poweredBy',
   'strapi::query',
   'strapi::body',
