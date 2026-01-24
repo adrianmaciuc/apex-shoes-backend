@@ -8,30 +8,34 @@ export default {
    * This gives you an opportunity to extend code.
    */
   register({ strapi }: { strapi: Core.Strapi }) {
-    // Add middleware to validate secret key before registration
-    strapi.server.use(async (ctx, next) => {
-      if (ctx.path === '/auth/local/register' && ctx.method === 'POST') {
-        const { secretKey } = ctx.request.body;
-        const validSecretKey = process.env.REGISTRATION_SECRET_KEY;
-        
-        if (!secretKey || secretKey !== validSecretKey) {
-          ctx.status = 400;
-          ctx.body = {
-            error: {
-              status: 400,
-              name: 'ValidationError',
-              message: 'SECRET_KEY_INVALID'
-            }
-          };
-          return;
-        }
-        
-        // Remove secretKey from request body before processing
-        delete ctx.request.body.secretKey;
+    // Override the auth register controller to validate secret key
+    const authController = strapi
+      .plugin("users-permissions")
+      .controller("auth");
+    const originalRegister = authController.register;
+
+    authController.register = async (ctx: any) => {
+      const { secretKey } = ctx.request.body;
+      const validSecretKey = process.env.REGISTRATION_SECRET_KEY;
+
+      if (!secretKey || secretKey !== validSecretKey) {
+        ctx.status = 400;
+        ctx.body = {
+          error: {
+            status: 400,
+            name: "ValidationError",
+            message: "SECRET_KEY_INVALID",
+          },
+        };
+        return;
       }
-      
-      await next();
-    });
+
+      // Remove secretKey from request body before processing
+      delete ctx.request.body.secretKey;
+
+      // Call original register function
+      return originalRegister.call(authController, ctx);
+    };
   },
 
   /**
