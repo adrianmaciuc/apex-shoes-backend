@@ -122,6 +122,11 @@
     "notes": {
       "type": "text",
       "required": false
+    },
+    "secretKey": {
+      "type": "string",
+      "required": true,
+      "private": true
     }
   }
 }
