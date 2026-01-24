@@ -7,6 +7,7 @@ export default [
     config: {
       origin: [
         "https://apexshoes.martioli.com",
+        "https://apexshoes.vercel.app",
         "http://localhost:5173",
         "http://localhost:3000",
       ],
