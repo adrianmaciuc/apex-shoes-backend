@@ -9,34 +9,33 @@ export default {
    */
   register({ strapi }: { strapi: Core.Strapi }) {
     // Override registration route to validate secret key
+    const originalRegister = strapi.plugin('users-permissions').controller('auth').register;
+    
     strapi.server.routes([
       {
         method: 'POST',
         path: '/auth/local/register',
-        handler: 'auth.register',
-        config: {
-          middlewares: [
-            (ctx: any, next: any) => {
-              const { secretKey } = ctx.request.body;
-              const validSecretKey = process.env.REGISTRATION_SECRET_KEY;
-              
-              if (!secretKey || secretKey !== validSecretKey) {
-                ctx.status = 400;
-                ctx.body = {
-                  error: {
-                    status: 400,
-                    name: 'ValidationError',
-                    message: 'SECRET_KEY_INVALID'
-                  }
-                };
-                return;
+        handler: async (ctx: any) => {
+          const { secretKey } = ctx.request.body;
+          const validSecretKey = process.env.REGISTRATION_SECRET_KEY;
+          
+          if (!secretKey || secretKey !== validSecretKey) {
+            ctx.status = 400;
+            ctx.body = {
+              error: {
+                status: 400,
+                name: 'ValidationError',
+                message: 'SECRET_KEY_INVALID'
               }
-              
-              // Remove secretKey from request body before processing
-              delete ctx.request.body.secretKey;
-              return next();
-            }
-          ]
+            };
+            return;
+          }
+          
+          // Remove secretKey from request body before processing
+          delete ctx.request.body.secretKey;
+          
+          // Call the original registration handler
+          return originalRegister(ctx);
         }
       }
     ]);
